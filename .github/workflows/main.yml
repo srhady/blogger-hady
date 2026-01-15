@@ -1,22 +1,32 @@
 name: Stream on GitHub
+
 on:
-  workflow_dispatch:
+  workflow_dispatch: # ম্যানুয়ালি স্টার্ট করার জন্য
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
       - name: Install Tools
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
           pip install streamlink
+
       - name: Setup Ngrok
         run: |
           curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
           sudo apt-get update && sudo apt-get install ngrok
           ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
-      - name: Run
+
+      - name: Run Server and Show Link
         run: |
-          python app.py &
-          ngrok http 7860
+          # আপনার app.py ব্যাকগ্রাউন্ডে রান করা হচ্ছে
+          python app.py & 
+          
+          # ৫ সেকেন্ড অপেক্ষা করে সরাসরি লগে লিঙ্ক দেখানোর কমান্ড
+          sleep 5
+          ngrok http 7860 --log=stdout
