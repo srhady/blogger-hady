@@ -27,5 +27,5 @@ jobs:
         run: |
           python app.py &
           sleep 10
-          # host-header রিরাইট করা হয়েছে যাতে এরর না আসে
+          # Ngrok-কে বাধ্য করা হচ্ছে যাতে এটি সরাসরি ডাটা পাঠায়
           ngrok http 7860 --log=stdout --host-header=rewrite
