@@ -11,7 +11,7 @@ REF = "https://xiaolin.live/"
 
 class ThreadedHTTPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     daemon_threads = True
-    allow_reuse_address = True # পোর্ট জ্যাম হওয়া আটকাবে
+    allow_reuse_address = True
 
 class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -22,18 +22,19 @@ class H(http.server.BaseHTTPRequestHandler):
         if channel_id in CHANNELS:
             self.send_response(200)
             self.send_header('Content-type', 'video/mp2t')
-            self.send_header('Access-Control-Allow-Origin', '*') # প্লেয়ারে প্লে হওয়ার অনুমতি
+            self.send_header('Access-Control-Allow-Origin', '*')
+            # নিচের এই হেডারটি Ngrok এর ওয়ার্নিং পেজ বন্ধ করবে
+            self.send_header('ngrok-skip-browser-warning', 'true') 
             self.send_header('Connection', 'keep-alive')
             self.end_headers()
             
             link = CHANNELS[channel_id]
-            # বাফারিং ফ্রি সেটিংস
             cmd = ['streamlink', '--stdout', '--hls-live-edge', '2', '--hls-segment-threads', '3', '--http-header', f'User-Agent={UA}', '--http-header', f'Referer={REF}', link, 'best']
             
             proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=None)
             try:
                 while True:
-                    data = proc.stdout.read(16384) # ১৬ কিলোবাইট বাফার
+                    data = proc.stdout.read(16384) # বাফারিং ফ্রি এক্সপেরিয়েন্স
                     if not data: break
                     self.wfile.write(data)
             except:
@@ -42,7 +43,6 @@ class H(http.server.BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
 
-# 0.0.0.0 ব্যবহার করা হয়েছে যাতে Ngrok এটিকে খুঁজে পায়
 with ThreadedHTTPServer(("0.0.0.0", PORT), H) as httpd:
     print(f"Server started on port {PORT}")
     httpd.serve_forever()
