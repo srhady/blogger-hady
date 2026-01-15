@@ -1,10 +1,10 @@
 name: Stream on GitHub
 
 on:
-  workflow_dispatch: # ম্যানুয়ালি স্টার্ট করার জন্য
+  workflow_dispatch:
 
 jobs:
-  build:
+  run-stream:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -12,7 +12,8 @@ jobs:
 
       - name: Install Tools
         run: |
-          sudo apt-get update && sudo apt-get install -y ffmpeg
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
           pip install streamlink
 
       - name: Setup Ngrok
@@ -24,9 +25,7 @@ jobs:
 
       - name: Run Server and Show Link
         run: |
-          # আপনার app.py ব্যাকগ্রাউন্ডে রান করা হচ্ছে
-          python app.py & 
-          
-          # ৫ সেকেন্ড অপেক্ষা করে সরাসরি লগে লিঙ্ক দেখানোর কমান্ড
-          sleep 5
-          ngrok http 7860 --log=stdout
+          python app.py &
+          sleep 10
+          # host-header রিরাইট করা হয়েছে যাতে এরর না আসে
+          ngrok http 7860 --log=stdout --host-header=rewrite
