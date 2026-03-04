@@ -20,9 +20,9 @@
 | Secret Name | Description |
 |---|---|
 | `GEMINI_API_KEY` | আপনার Gemini AI-এর API Key |
-| `SENDER_EMAIL` | যে জিমেইল থেকে পোস্ট পাঠানো হবে (srhady12@gmail.com) |
-| `SENDER_APP_PASSWORD` | জিমেইল এর ১৬ ডিজিটের App Password (nxqshimdiikijrwt) |
-| `BLOGGER_EMAIL` | আপনার ব্লগের নির্দিষ্ট পোস্টিং ইমেইল (Srhady12.quranic@blogger.com) |
+| `SENDER_EMAIL` | যে জিমেইল থেকে পোস্ট পাঠানো হবে () |
+| `SENDER_APP_PASSWORD` | জিমেইল এর ১৬ ডিজিটের App Password () |
+| `BLOGGER_EMAIL` | আপনার ব্লগের নির্দিষ্ট পোস্টিং ইমেইল () |
 
 ### ৩. সময় পরিবর্তন (Optional)
 প্রতিদিন কখন পোস্ট হবে তা পরিবর্তন করতে চাইলে `.github/workflows/daily_post.yml` ফাইলের `cron` টাইম পরিবর্তন করুন। বর্তমানে এটি বাংলাদেশ সময় সকাল ৯টায় (UTC 3:00) সেট করা আছে।
