@@ -100,9 +100,8 @@ def generate_and_post():
         
         lines = clean_text.split('\n')
         # টাইটেল থেকে অপ্রয়োজনীয় ট্যাগ রিমুভ করা হয়েছে
-        title = lines[0].replace('<b>', '').replace('</b>', '').replace('<p>', '').replace('</p>', '').replace('<h1>', '').replace('</h1>', '').strip()
-        post_text = '\n'.join(lines[1:]).strip()
-        
+        title = lines[0].replace('<b>', '').replace('</b>', '').replace('<p>', '').replace('</p>', '').replace('<h1>', '').replace('</h1>', '').replace('<br>', '').strip()
+
         formatted_post = f'<div style="font-size: 16px;">{post_text}</div>'
         post_to_blogger(title, formatted_post)
     except Exception as e:
