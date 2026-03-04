@@ -1,38 +1,49 @@
-# 🌙 কুরআনিক ইনসাইটস (Quranic Insights) - অটোমেটেড ইসলামিক ব্লগ বট
+<div align="center">
+  <img src="https://capsule-render.vercel.app/render?type=waving&color=008080&height=200&section=header&text=🌙%20কুরআনিক%20ইনসাইটস&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
+</div>
 
-এই প্রজেক্টটি একটি পাইথন ভিত্তিক অটোমেশন সিস্টেম যা **Gemini AI** ব্যবহার করে প্রতিদিন স্বয়ংক্রিয়ভাবে মানসম্মত ইসলামিক ব্লগ পোস্ট জেনারেট করে এবং **Blogger** প্ল্যাটফর্মে পাবলিশ করে। এটি **GitHub Actions** ব্যবহার করে শিডিউল করা হয়েছে, ফলে আপনার ফোন বা কম্পিউটার বন্ধ থাকলেও এটি নিয়মিত পোস্ট করতে সক্ষম।
+# 🚀 অটোমেটেড ইসলামিক ব্লগ বট (Quranic Insights)
+
+এই প্রজেক্টটি একটি পাইথন ভিত্তিক অটোমেশন সিস্টেম যা **Gemini AI** ব্যবহার করে প্রতিদিন স্বয়ংক্রিয়ভাবে মানসম্মত ইসলামিক ব্লগ পোস্ট জেনারেট করে এবং **Blogger** প্ল্যাটফর্মে পাবলিশ করে। এটি **GitHub Actions** ব্যবহার করে শিডিউল করা হয়েছে।
 
 ## ✨ বৈশিষ্ট্যসমূহ (Features)
-* **AI চালিত কনটেন্ট:** Gemini 2.5 Flash মডেল ব্যবহার করে সম্পূর্ণ ইউনিক এবং শিক্ষণীয় পোস্ট তৈরি করা হয়।
-* **বৈচিত্র্যময় ক্যাটাগরি:** মহাবিশ্ব, নবীদের জীবনী, বিজ্ঞান এবং ইসলামের ইতিহাসসহ ২৩টি ভিন্ন ভিন্ন ক্যাটাগরিতে পোস্ট জেনারেট হয়।
-* **অটো-শিডিউলিং:** GitHub Actions-এর মাধ্যমে প্রতিদিন নির্দিষ্ট সময়ে অটোমেটিক পোস্ট পাবলিশ হয়।
-* **ক্লিন ফরম্যাটিং:** ১৬px ফন্ট সাইজ এবং এইচটিএমএল (HTML) ট্যাগ ব্যবহার করে প্রফেশনাল লুক নিশ্চিত করা হয়েছে।
-* **নির্ভরযোগ্য তথ্য:** প্রতিটি পোস্টে কোরআন ও হাদিসের রেফারেন্স এবং তাফসিরের সোর্স উল্লেখ করার নির্দেশনা দেওয়া আছে।
-
-## 🛠️ সেটআপ গাইড (Setup Guide)
-
-### ১. রিপোজিটরি তৈরি
-প্রথমে গিটহাবে একটি নতুন রিপোজিটরি তৈরি করুন এবং `blogger_bot.py`, `requirements.txt` ও `.github/workflows/daily_post.yml` ফাইলগুলো আপলোড করুন।
-
-### ২. এনভায়রনমেন্ট ভেরিয়েবল সেটআপ (GitHub Secrets)
-আপনার রিপোজিটরির **Settings > Secrets and variables > Actions**-এ গিয়ে নিচের ৪টি Secret যোগ করুন:
-
-| Secret Name | Description |
-|---|---|
-| `GEMINI_API_KEY` | আপনার Gemini AI-এর API Key |
-| `SENDER_EMAIL` | যে জিমেইল থেকে পোস্ট পাঠানো হবে () |
-| `SENDER_APP_PASSWORD` | জিমেইল এর ১৬ ডিজিটের App Password () |
-| `BLOGGER_EMAIL` | আপনার ব্লগের নির্দিষ্ট পোস্টিং ইমেইল () |
-
-### ৩. সময় পরিবর্তন (Optional)
-প্রতিদিন কখন পোস্ট হবে তা পরিবর্তন করতে চাইলে `.github/workflows/daily_post.yml` ফাইলের `cron` টাইম পরিবর্তন করুন। বর্তমানে এটি বাংলাদেশ সময় সকাল ৯টায় (UTC 3:00) সেট করা আছে।
-
-## 🚀 যেভাবে কাজ করে
-১. GitHub Actions প্রতিদিন নির্দিষ্ট সময়ে পাইথন স্ক্রিপ্টটি রান করে।
-২. স্ক্রিপ্টটি র্যান্ডমলি একটি ক্যাটাগরি সিলেক্ট করে Gemini AI-কে প্রম্পট পাঠায়।
-৩. Gemini AI একটি চমৎকার পোস্ট লিখে দেয়।
-৪. পাইথন স্ক্রিপ্টটি সেই পোস্টটি ইমেইলের মাধ্যমে সরাসরি আপনার ব্লগারে পাবলিশ করে দেয়।
+* **AI চালিত কনটেন্ট:** Gemini 2.5 Flash মডেল ব্যবহার করে সম্পূর্ণ ইউনিক এবং শিক্ষণীয় পোস্ট তৈরি করা হয়।
+* **অটো-শিডিউলিং:** GitHub Actions-এর মাধ্যমে প্রতিদিন নির্দিষ্ট সময়ে অটোমেটিক পোস্ট পাবলিশ হয়।
+* **ক্লিন ফরম্যাটিং:** ১৬px ফন্ট সাইজ এবং এইচটিএমএল ট্যাগ ব্যবহার করে প্রফেশনাল লুক নিশ্চিত করা হয়েছে।
 
 ---
-**Author:** HADY  
-**Project:** Quranic Insights Automation
+
+## 🛠️ এনভায়রনমেন্ট সেটিংস (GitHub Secrets)
+আপনার রিপোজিটরির **Settings > Secrets**-এ এই ৪টি ভ্যালু যোগ করতে ভুলবেন না:
+`GEMINI_API_KEY`, `SENDER_EMAIL`, `SENDER_APP_PASSWORD`, `BLOGGER_EMAIL`
+
+---
+
+## 👤 ডেভেলপার পরিচিতি (VIP Author Card)
+
+<div align="center">
+  <table border="0">
+    <tr>
+      <td align="center" width="9999">
+        <br />
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjVv6z8Nn9-uUeOQ_eO8U_iG_8R_j_g_v_x_j_G_k_k/s1600/your_logo.png" width="120px;" style="border-radius: 50%; border: 4px solid #008080; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);" alt="HADY"/>
+        <br />
+        <br />
+        <font size="6" color="#008080"><b>MD. SOHANUR RAHMAN HADY</b></font><br />
+        <font size="4"><b>🚢 Maritime Professional & AI Enthusiast</b></font>
+        <br /><br />
+        <a href="mailto:srhady12@gmail.com">
+          <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white" />
+        </a>
+        <a href="https://quranicinsightsbd.blogspot.com">
+          <img src="https://img.shields.io/badge/Blogger-FF5722?style=for-the-badge&logo=blogger&logoColor=white" />
+        </a>
+        <a href="#">
+          <img src="https://img.shields.io/badge/Status-Verified_Developer-blue?style=for-the-badge" />
+        </a>
+        <br /><br />
+        <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" width="100%">
+      </td>
+    </tr>
+  </table>
+</div>
