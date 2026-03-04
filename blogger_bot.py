@@ -6,11 +6,15 @@ import time
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# Credentials (GitHub Secrets থেকে আসবে)
+# Credentials
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_APP_PASSWORD = os.getenv("SENDER_APP_PASSWORD")
 BLOGGER_EMAIL = os.getenv("BLOGGER_EMAIL")
+
+# Telegram Credentials
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
 
@@ -28,17 +32,27 @@ categories = [
     "ইসলামী আখলাক, উত্তম চরিত্র এবং মানবিক মূল্যবোধ",
     "কোরআনে বর্ণিত নারী চরিত্র এবং তাদের শিক্ষণীয় অবদান",
     "দৈনন্দিন জীবনে রাসূল (সাঃ) এর সুন্নাহ এবং এর বৈজ্ঞানিক উপকারিতা",
-    "ইবাদতের (নামাজ, রোজা, জাকাত, হজ) দার্শনিক ও বৈজ্ঞানিক তাৎপর্য",
-    "কোরআন ও হাদিসের আলোকে মানসিক শান্তি ও সাইকোলজি",
-    "কোরআনে উল্লিখিত বিভিন্ন প্রাণী ও তাদের সৃষ্টিগত বিস্ময়",
-    "ইসলামী অর্থনীতি, জাকাত এবং হালাল উপার্জনের বরকত",
-    "নবী-রাসূলদের মোজেজা (অলৌকিক ঘটনা) এবং তার যৌক্তিক বিশ্লেষণ",
-    "বিপদ-আপদে সবর (ধৈর্য) এবং শুকরিয়া (কৃতজ্ঞতা) আদায়ের কোরআনিক নির্দেশনা",
-    "কোরআনের গুরুত্বপূর্ণ দোয়া, শানে নুযুল এবং কবুল হওয়ার শর্ত",
-    "ইসলামের সোনালী যুগ এবং মুসলিম বিজ্ঞানীদের আবিষ্কার",
-    "সামাজিক ন্যায়বিচার, মানবাধিকার এবং প্রতিবেশীর হক",
-    "ইসলামের ঐতিহাসিক যুদ্ধসমূহ (বদর, ওহুদ, খন্দক) এবং এর কৌশলগত শিক্ষা"
+    "ইবাদতের (নামাজ, রোজা, জাকাত, হজ) দার্শনিক ও বৈজ্ঞানিক তাৎপর্য"
 ]
+
+def send_telegram_msg(title):
+    try:
+        if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+            print("Telegram credentials missing!")
+            return
+            
+        message = f"✅ <b>নতুন পোস্ট পাবলিশ হয়েছে!</b>\n\n📌 <b>টাইটেল:</b> {title}\n\n🌐 <a href='https://quranicinsightsbd.blogspot.com'>ব্লগে গিয়ে পড়ুন</a>"
+        
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": message,
+            "parse_mode": "HTML"
+        }
+        requests.post(url, json=payload)
+        print("✅ টেলিগ্রামে মেসেজ পাঠানো হয়েছে!")
+    except Exception as e:
+        print(f"❌ Telegram Error: {str(e)}")
 
 def post_to_blogger(title, content):
     try:
@@ -53,16 +67,18 @@ def post_to_blogger(title, content):
         server.sendmail(SENDER_EMAIL, BLOGGER_EMAIL, msg.as_string())
         server.quit()
         print(f"✅ পোস্ট সফল: {title}")
+        
+        # ব্লগারে পোস্ট সফল হলে টেলিগ্রামে মেসেজ পাঠাবে
+        send_telegram_msg(title)
+        
     except Exception as e:
         print(f"❌ Blogger Error: {str(e)}")
 
 def generate_and_post():
-    # রিপিট এড়ানোর জন্য টাইম-সিড ব্যবহার করা হয়েছে
     random.seed(time.time_ns())
     category = random.choice(categories)
     seed = random.randint(1, 999999) 
     
-    # আপনার দেওয়া হুবহু প্রম্পট, শুধুমাত্র <br><br> এর অবস্থান ঠিক করা হয়েছে
     prompt = f"""
     তুমি একজন বিজ্ঞ ইসলামিক স্কলার। আমি তোমাকে একটি ক্যাটাগরি দিচ্ছি: '{category}'। 
     এই বিষয়ের ওপর ভিত্তি করে সম্পূর্ণ নতুন ও শিক্ষণীয় একটি নির্দিষ্ট টপিক নির্বাচন করো (Random Seed: {seed}) এবং টেলিগ্রাম চ্যানেলের জন্য বাংলায় একটি চমৎকার পোস্ট লেখো।
@@ -83,10 +99,10 @@ def generate_and_post():
         clean_text = raw_text.replace('```html', '').replace('```', '').strip()
         
         lines = clean_text.split('\n')
-        title = lines[0].replace('<b>', '').replace('</b>', '').strip()
+        # টাইটেল থেকে অপ্রয়োজনীয় ট্যাগ রিমুভ করা হয়েছে
+        title = lines[0].replace('<b>', '').replace('</b>', '').replace('<p>', '').replace('</p>', '').replace('<h1>', '').replace('</h1>', '').strip()
         post_text = '\n'.join(lines[1:]).strip()
         
-        # আপনার নির্দেশ অনুযায়ী হুবহু ১৬px ফন্ট সাইজ নিশ্চিত করা হলো
         formatted_post = f'<div style="font-size: 16px;">{post_text}</div>'
         post_to_blogger(title, formatted_post)
     except Exception as e:
