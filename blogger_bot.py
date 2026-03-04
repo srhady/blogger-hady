@@ -17,6 +17,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+HISTORY_FILE = "history.txt" # নতুন এড করা হলো
 
 # বিশাল এবং বৈচিত্র্যময় ক্যাটাগরি লিস্ট (মোট ২৩টি)
 categories = [
@@ -44,6 +45,18 @@ categories = [
     "সামাজিক ন্যায়বিচার, মানবাধিকার এবং প্রতিবেশীর হক",
     "ইসলামের ঐতিহাসিক যুদ্ধসমূহ (বদর, ওহুদ, খন্দক) এবং এর কৌশলগত শিক্ষা"
 ]
+
+# মেমোরি থেকে আগের টপিকগুলো পড়ার ফাংশন (নতুন এড করা হলো)
+def read_history():
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+            return f.read().splitlines()
+    return []
+
+# নতুন টপিক মেমোরিতে সেভ করার ফাংশন (নতুন এড করা হলো)
+def save_history(title):
+    with open(HISTORY_FILE, "a", encoding="utf-8") as f:
+        f.write(title + "\n")
 
 def send_telegram_msg(title):
     try:
@@ -89,9 +102,17 @@ def generate_and_post():
     category = random.choice(categories)
     seed = random.randint(1, 999999) 
     
+    # মেমোরি থেকে পুরোনো টপিক বের করা (নতুন এড করা হলো)
+    past_topics = read_history()
+    history_text = ", ".join(past_topics) if past_topics else "এখনো কোনো পোস্ট করা হয়নি।"
+    
     prompt = f"""
     তুমি একজন বিজ্ঞ ইসলামিক স্কলার। আমি তোমাকে একটি ক্যাটাগরি দিচ্ছি: '{category}'। 
-    এই বিষয়ের ওপর ভিত্তি করে সম্পূর্ণ নতুন ও শিক্ষণীয় একটি নির্দিষ্ট টপিক নির্বাচন করো (Random Seed: {seed}) এবং টেলিগ্রাম চ্যানেলের জন্য বাংলায় একটি চমৎকার পোস্ট লেখো।
+    
+    🚨 অত্যন্ত জরুরি নির্দেশ: 
+    তুমি অতীতে নিচের টপিকগুলোর উপর ইতিমধ্যে পোস্ট লিখেছো:
+    [{history_text}]
+    তোমার কাজ হলো, এই টপিকগুলো সম্পূর্ণ বাদ দিয়ে (Random Seed: {seed} ব্যবহার করে) এই ক্যাটাগরির ভেতর থেকে একদম নতুন, আনকমন এবং বিরল একটি বিষয় খুঁজে বের করা, যা আগে কখনো আলোচনা হয়নি।
     
     সহজ কিছু নিয়ম মেনে চলবে:
     ১. আকার ও গঠন: লেখাটি ৫০০ শব্দের কাছাকাছি  রাখবে। শুরুতে একটি অত্যন্ত আকর্ষণীয়, কৌতূহলোদ্দীপক এবং SEO-বান্ধব প্রশ্নবোধক শিরোনাম বোল্ড করে দেবে (যেমন: 'চরম বিপদে পড়ে মুসা (আ.) কোন দোয়াটি পড়েছিলেন?' বা 'পাহাড় কেটে বাড়ি বানানো সামুদ জাতি কেন ধ্বংস হয়েছিল?'). গতানুগতিক বোরিং নাম দেবে না। কোনো সাব-হেডিং বা পয়েন্ট দেওয়ার দরকার নেই, ২-৩টি প্যারায় সাবলীলভাবে লিখবে। প্রতিটি প্যারার শেষে লাইন ব্রেকের জন্য <br><br> ট্যাগ ব্যবহার করবে।
@@ -115,6 +136,9 @@ def generate_and_post():
         
         # এই লাইনটি মিসিং ছিল, এখন যোগ করা হয়েছে
         post_text = '\n'.join(lines[1:]).strip()
+        
+        # ব্লগারে পোস্ট করার আগে মেমোরিতে টাইটেল সেভ করে রাখা (নতুন এড করা হলো)
+        save_history(title)
         
         formatted_post = f'<div style="font-size: 16px;">{post_text}</div>'
         post_to_blogger(title, formatted_post)
